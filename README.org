@@ -1,0 +1,74 @@
+#+TITLE: all-the-icons-nerd-fonts
+#+AUTHOR: Mohsin Kaleem
+
+
+
+A bridge between [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] and [[https://github.com/twlz0ne/nerd-fonts.el][nerd-fonts]].
+
+This package defines a bunch of all-the-icons families for the various nerd-fonts.
+This means you can use ~all-the-icons-nerd-fa~ to insert a font-awesome icon through
+nerd-fonts just like you would with ~all-the-icons-faicon~. Furthermore this package
+defines a helper function to convert references to all-the-icons icons to equivalent
+or similar enough nerd-fonts icons.
+
+Why? Because nerd-fonts has a greater coverage than all-the-icons *and* all-the-icons
+may repeat glyphs across font sets. The latter point isn't a problem on GUI emacs
+frames but on terminal frames because a glyph can only ever be drawn from a single
+font, there's chance that different icons from different families but using the same
+glyph aren't rendered the way their supposed to be. With nerd-fonts each icon has a
+unique glyph which prevents this issue.
+
+* Table of Contents                                                     :TOC:
+- [[#installation][Installation]]
+  - [[#manually][Manually]]
+  - [[#straight][Straight]]
+  - [[#from-melpa][From MELPA]]
+- [[#usage][Usage]]
+  - [[#example-config][Example Config]]
+- [[#appendix][Appendix]]
+
+* Installation
+** Manually
+   1. Clone the repo.
+   2. Add the repo path to your emacs ~load-path~.
+   3. Load it when needed.
+
+
+   *Note*: The version of nerd-fonts available on MELPA isn't compatible with this
+   package until [[https://github.com/twlz0ne/nerd-fonts.el/issues/2][#2]] is fixed. In the meantime you can use my fork at
+   [[https://github.com/mohkale/nerd-fonts.el][mohkale/nerd-fonts.el]].
+
+** Straight
+   You can install this package using the [[https://github.com/raxod502/straight.el][straight]] package manager.
+
+   #+begin_src emacs-lisp
+     (use-package all-the-icons-nerd-fonts
+       :straight (all-the-icons-nerd-fonts :host github :repo "mohkale/all-the-icons-nerd-fonts"))
+   #+end_src
+
+** From MELPA
+   TODO: MELPA support.
+
+* Usage
+  Requiring this package will setup all the ~all-the-icon~ font families for nerd
+  fonts. You can call ~(all-the-icons-nerd-fonts-prefer)~ after requiring to make
+  any existing all-the-icons configurations prefer nerd-fonts.
+
+** Example Config
+   #+begin_src emacs-lisp
+     (use-package all-the-icons-nerd-fonts
+       :straight
+       (all-the-icons-nerd-fonts :host github :repo "mohkale/all-the-icons-nerd-fonts")
+       :after all-the-icons
+       :demand t
+       :config
+       (all-the-icons-nerd-fonts-prefer))
+   #+end_src
+
+* Appendix                                                          :ARCHIVE:
+
+# Local Variables:
+# eval: (toc-org-mode 1)
+# End:
+
+#  LocalWords:  nerd Config

@@ -6,6 +6,7 @@
 ;; Keywords: convenience, lisp
 ;; Package-Requires: ((emacs "28.0") (all-the-icons "5.0") (nerd-fonts "0.1"))
 ;; Version: 0.1
+;; Homepage: https://github.com/mohkale/all-the-icons-nerd-fonts
 
 ;; This file is part of all-the-icons-nerd-fonts.
 

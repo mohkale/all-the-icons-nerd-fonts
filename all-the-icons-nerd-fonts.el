@@ -120,12 +120,13 @@ value family."
     ((all-the-icons-fileicon   . "dockerfile")       .    (all-the-icons-nerd-linux  . "docker"))
     ((all-the-icons-fileicon   . "bib")              .    (all-the-icons-nerd-fa     . "book"))
     ((all-the-icons-fileicon   . "php")              .    (all-the-icons-nerd-dev    . "php"))
-    ((all-the-icons-fileicon   . "racket")           .    (all-the-icons-fileicon    . "lisp")))
+    ((all-the-icons-fileicon   . "racket")           .    (all-the-icons-fileicon    . "lisp"))
+    ((all-the-icons-fileicon   . "gnu")              .    (all-the-icons-nerd-dev    . "gnu")))
   "Conversion configuration between `all-the-icons' icons and `nerd-fonts' icons."
   :type '(alist :key-type (alist :key-type (symbol :tag "All the icons font family.")
-                                 :value-type (string :tag "All the icons font name."))
+                                 :value-type (string :tag "All the icons icon name."))
                 :value-type (alist :key-type (symbol :tag "Nerd fonts font-family.")
-                                   :value-type (string :tag "Nerd fonts font-name."))))
+                                   :value-type (string :tag "Nerd fonts icon name."))))
 
 (defun all-the-icons-nerd-fonts-prefer ()
   "Replace any `all-the-icons' associations with `nerd-fonts'."

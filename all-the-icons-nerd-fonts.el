@@ -4,8 +4,8 @@
 
 ;; Author: Mohsin Kaleem <mohkale@gmail.com>
 ;; Keywords: convenience, lisp
-;; Version: 0.1
 ;; Package-Requires: ((emacs "28.0") (all-the-icons "5.0") (nerd-icons "0.0.1"))
+;; Version: 0.2
 
 ;; Copyright (C) 2021 Mohsin Kaleem
 
@@ -78,7 +78,7 @@ in DATA-ALIST that have a prefix of PREFIX."
 (all-the-icons-nerd-fonts--define-family nerd-cod     nerd-icons/codicon-alist   "nf-cod-")
 (all-the-icons-nerd-fonts--define-family nerd-linux   nerd-icons/flicon-alist    "nf-linux-")
 (all-the-icons-nerd-fonts--define-family nerd-mdi     nerd-icons/mdicon-alist    "nf-mdi-")
-(all-the-icons-nerd-fonts--define-family nerd-md      nerd-icons/mdicon-alist    "nf-mdi-")
+(all-the-icons-nerd-fonts--define-family nerd-md      nerd-icons/mdicon-alist    "nf-md-")
 
 ;; Replace any none nerd-font lookups with nerd-font lookups.
 (defcustom all-the-icons-nerd-fonts-convert-families

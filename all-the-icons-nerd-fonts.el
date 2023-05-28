@@ -131,6 +131,7 @@ names you should override the icon instead with
     (all-the-icons-fileicon   "bib"                      all-the-icons-nerd-fa     "book")
     (all-the-icons-fileicon   "cljs"                     all-the-icons-nerd-dev    "clojure")
     (all-the-icons-fileicon   "dockerfile"               all-the-icons-nerd-linux  "docker")
+    (all-the-icons-fileicon   "go"                       all-the-icons-nerd-seti   "go")
     (all-the-icons-fileicon   "gnu"                      all-the-icons-nerd-dev    "gnu")
     (all-the-icons-fileicon   "php"                      all-the-icons-nerd-dev    "php")
     (all-the-icons-fileicon   "racket"                   all-the-icons-fileicon    "lisp")

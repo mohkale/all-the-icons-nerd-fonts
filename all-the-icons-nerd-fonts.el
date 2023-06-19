@@ -173,8 +173,10 @@ Force replace any references to the source icon with the destination icon."
     all-the-icons-weather-icon-alist
     all-the-icons-web-mode-icon-alist))
 
-(defun all-the-icons-nerd-fonts-prefer ()
-  "Replace any `all-the-icons' associations with `nerd-fonts'."
+(defun all-the-icons-nerd-fonts-prefer (&optional list-vars)
+  "Replace any `all-the-icons' associations with `nerd-fonts'.
+When LIST-VARS is set update LIST-VARS instead of the standard all-the-icons
+list variables."
   (let ((override-map (make-hash-table
                        :size (length all-the-icons-nerd-fonts-overrides))))
     (dolist (it all-the-icons-nerd-fonts-overrides)
@@ -182,7 +184,7 @@ Force replace any references to the source icon with the destination icon."
                (cddr it)
                override-map))
 
-    (dolist (var all-the-icons-nerd-fonts--alist-vars)
+    (dolist (var (or list-vars all-the-icons-nerd-fonts--alist-vars))
       (dolist (assoc (when (boundp var) (symbol-value var)))
         (if-let* ((override-key
                    (intern (concat (symbol-name (cadr assoc))

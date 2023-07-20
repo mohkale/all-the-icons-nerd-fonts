@@ -1,6 +1,8 @@
 #+TITLE: all-the-icons-nerd-fonts
 #+AUTHOR: Mohsin Kaleem
 
+#+html: <p align="right"><a href="https://melpa.org/#/all-the-icons-nerd-fonts"><img align="center" alt="MELPA" src="https://melpa.org/packages/all-the-icons-nerd-fonts.svg"/></a></p>
+
 
 
 A bridge between [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] and [[https://github.com/twlz0ne/nerd-fonts.el][nerd-fonts]].
@@ -21,7 +23,6 @@ unique glyph which prevents this issue.
 * Table of Contents                                                     :TOC:
 - [[#installation][Installation]]
   - [[#manually][Manually]]
-  - [[#straight][Straight]]
   - [[#from-melpa][From MELPA]]
 - [[#usage][Usage]]
   - [[#example-config][Example Config]]
@@ -33,21 +34,15 @@ unique glyph which prevents this issue.
    2. Add the repo path to your emacs ~load-path~.
    3. Load it when needed.
 
-
-   *Note*: The version of nerd-fonts available on MELPA isn't compatible with this
-   package until [[https://github.com/twlz0ne/nerd-fonts.el/issues/2][#2]] is fixed. In the meantime you can use my fork at
-   [[https://github.com/mohkale/nerd-fonts.el][mohkale/nerd-fonts.el]].
-
-** Straight
-   You can install this package using the [[https://github.com/raxod502/straight.el][straight]] package manager.
+** From MELPA
+   This package is on [[https://github.com/melpa/melpa][MELPA]]. You can add this to your ~package-archives~ variable and
+   then install through ~M-x package-install~.
 
    #+begin_src emacs-lisp
-     (use-package all-the-icons-nerd-fonts
-       :straight (all-the-icons-nerd-fonts :host github :repo "mohkale/all-the-icons-nerd-fonts"))
+     (push '("melpa" . "https://melpa.org/packages/") package-archives)
+     (package-refresh-contents)
+     (package-install 'all-the-icons-nerd-fonts)
    #+end_src
-
-** From MELPA
-   TODO: MELPA support.
 
 * Usage
   Requiring this package will setup all the ~all-the-icon~ font families for nerd

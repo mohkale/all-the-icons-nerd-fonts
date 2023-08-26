@@ -6,6 +6,7 @@
 ;; Keywords: convenience, lisp
 ;; Package-Requires: ((emacs "28.0") (all-the-icons "5.0") (nerd-icons "0.0.1"))
 ;; Version: 0.2
+;; Homepage: https://github.com/mohkale/all-the-icons-nerd-fonts
 
 ;; Copyright (C) 2021 Mohsin Kaleem
 
@@ -35,6 +36,8 @@
 ;;; Code:
 
 (require 'cl-lib)
+(eval-when-compile (require 'subr-x))
+
 (require 'all-the-icons)
 (require 'nerd-icons-data)
 

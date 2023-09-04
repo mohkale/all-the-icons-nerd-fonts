@@ -4,7 +4,7 @@
 
 ;; Author: Mohsin Kaleem <mohkale@gmail.com>
 ;; Keywords: convenience, lisp
-;; Package-Requires: ((emacs "28.0") (all-the-icons "5.0") (nerd-icons "0.0.1"))
+;; Package-Requires: ((emacs "28.1") (all-the-icons "5.0") (nerd-icons "0.0.1"))
 ;; Version: 0.2
 ;; Homepage: https://github.com/mohkale/all-the-icons-nerd-fonts
 

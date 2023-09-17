@@ -1,11 +1,13 @@
 #+TITLE: all-the-icons-nerd-fonts
 #+AUTHOR: Mohsin Kaleem
 
-#+html: <p align="right"><a href="https://melpa.org/#/all-the-icons-nerd-fonts"><img align="center" alt="MELPA" src="https://melpa.org/packages/all-the-icons-nerd-fonts.svg"/></a></p>
+#+html: <p align="right">
+#+html: <a href="https://melpa.org/#/all-the-icons-nerd-fonts"><img alt="MELPA" src="https://melpa.org/packages/all-the-icons-nerd-fonts-badge.svg"/></a>
+#+html: </p>
 
 
 
-A bridge between [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] and [[https://github.com/twlz0ne/nerd-fonts.el][nerd-fonts]].
+A bridge between [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] and [[https://github.com/twlz0ne/nerd-icons.el][nerd-icons]].
 
 This package defines a bunch of all-the-icons families for the various nerd-fonts.
 This means you can use ~all-the-icons-nerd-fa~ to insert a font-awesome icon through

@@ -176,6 +176,7 @@ Force replace any references to the source icon with the destination icon."
     all-the-icons-weather-icon-alist
     all-the-icons-web-mode-icon-alist))
 
+;;;###autoload
 (defun all-the-icons-nerd-fonts-prefer (&optional list-vars)
   "Replace any `all-the-icons' associations with `nerd-fonts'.
 When LIST-VARS is set update LIST-VARS instead of the standard all-the-icons

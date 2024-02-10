@@ -207,6 +207,9 @@ list variables."
     (all-the-icons-data/fileicon-alist . all-the-icons-data/file-icon-alist)
     (all-the-icons-data/wicon-alist . all-the-icons-data/weather-icons-alist)))
 
+(defconst all-the-icons-nerd-fonts--skip-families
+  '(all-the-icons--web-mode-icon))
+
 (defun all-the-icons-nerd-fonts--check-configs ()
   "Ensure all the icons in the `all-the-icons' configuration variables exist."
   (dolist (var all-the-icons-nerd-fonts--alist-vars)
@@ -217,13 +220,16 @@ list variables."
                  (icon (caddr assoc))
                  (data-var (intern (concat "all-the-icons-data/" (symbol-name family) "-alist"))))
             (setq data-var (alist-get data-var all-the-icons-nerd-fonts--data-remap-alist data-var))
-            (if (boundp data-var)
-                (unless (assoc icon (symbol-value data-var) #'equal)
-                  (display-warning 'all-the-icons-nerd-fonts
-                                   (format "Missing icon=%s from family=%s in var=%s"
-                                           icon family var)))
+            (cond
+             ((boundp data-var)
+              (unless (assoc icon (symbol-value data-var) #'equal)
+                (display-warning 'all-the-icons-nerd-fonts
+                                 (format "Missing icon=%s from family=%s in var=%s"
+                                         icon family var))))
+             ((member (cadr assoc) all-the-icons-nerd-fonts--skip-families) nil)
+             (t
               (display-warning 'all-the-icons-nerd-fonts
-                               (format "Could not find data-alist=%s from var=%s" data-var var)))))
+                               (format "Could not find data-alist=%s from var=%s" data-var var))))))
       (display-warning 'all-the-icons-nerd-fonts
                        (format "all-the-icons override variable not bound: %s" var)))))
 

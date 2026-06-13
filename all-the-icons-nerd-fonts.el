@@ -85,7 +85,7 @@ in DATA-ALIST that have a prefix of PREFIX."
 
 ;; Replace any none nerd-font lookups with nerd-font lookups.
 (defcustom all-the-icons-nerd-fonts-convert-families
-  '((all-the-icons-material . all-the-icons-nerd-mdi)
+  '((all-the-icons-material . all-the-icons-nerd-md)
     (all-the-icons-faicon . all-the-icons-nerd-fa)
     (all-the-icons-octicon . all-the-icons-nerd-oct)
     (all-the-icons-wicon . all-the-icons-nerd-weather))
@@ -93,7 +93,10 @@ in DATA-ALIST that have a prefix of PREFIX."
 This expects these families to be compatible between each other, that is
 both families contain the same set of icons. If any icons have different
 names you should override the icon instead with
-`all-the-icons-nerd-fonts-overrides'."
+`all-the-icons-nerd-fonts-overrides'.
+
+Note: Nerd Fonts moved material design icons from `nf-mdi-' to `nf-md-'
+prefix, so we map to `all-the-icons-nerd-md' (not `nerd-mdi')."
   :type '(alist :key-type symbol :value-type symbol))
 
 (make-obsolete-variable 'all-the-icons-nerd-fonts-convert-icons "Use `all-the-icons-nerd-fonts-overrides' instead." "0.2")
@@ -166,8 +169,7 @@ Force replace any references to the source icon with the destination icon."
                (symbol :tag "Destination icon")))
 
 (defconst all-the-icons-nerd-fonts--alist-vars
-  '(all-the-icons-chevron-icon-alist
-    all-the-icons-dir-icon-alist
+  '(all-the-icons-dir-icon-alist
     all-the-icons-dir-icon-overrides
     all-the-icons-extension-icon-alist
     all-the-icons-icon-alist
@@ -176,11 +178,98 @@ Force replace any references to the source icon with the destination icon."
     all-the-icons-weather-icon-alist
     all-the-icons-web-mode-icon-alist))
 
+(defvar all-the-icons-nerd-fonts--override-map nil
+  "Hash table for quick icon override lookups.
+Keys are symbols like `all-the-icons-material-chevron_right'.
+Values are (FAMILY . ICON-NAME) cons cells.")
+
+(defvar all-the-icons-nerd-fonts--advice-enabled nil
+  "Non-nil when function advice for icon families is active.")
+
+(defun all-the-icons-nerd-fonts--build-override-map ()
+  "Build the override hash table from `all-the-icons-nerd-fonts-overrides'."
+  (let ((map (make-hash-table :test 'equal
+                              :size (length all-the-icons-nerd-fonts-overrides))))
+    (dolist (entry all-the-icons-nerd-fonts-overrides)
+      (let* ((src-family (nth 0 entry))
+             (src-icon (nth 1 entry))
+             (dst-family (nth 2 entry))
+             (dst-icon (nth 3 entry))
+             (key (concat (symbol-name src-family) "-" src-icon)))
+        (puthash key (cons dst-family dst-icon) map)))
+    map))
+
+(defun all-the-icons-nerd-fonts--get-nerd-data-alist (nerd-family)
+  "Get the data alist for NERD-FAMILY.
+NERD-FAMILY should be a symbol like `all-the-icons-nerd-md'."
+  (let* ((family-name (string-remove-prefix "all-the-icons-"
+                                            (symbol-name nerd-family)))
+         (data-var (intern (concat "all-the-icons-data/" family-name "-alist"))))
+    (when (boundp data-var)
+      (symbol-value data-var))))
+
+(defun all-the-icons-nerd-fonts--icon-exists-p (nerd-family icon-name)
+  "Check if ICON-NAME exists in NERD-FAMILY's data alist."
+  (when-let ((data-alist (all-the-icons-nerd-fonts--get-nerd-data-alist nerd-family)))
+    (assoc icon-name data-alist #'string=)))
+
+(defun all-the-icons-nerd-fonts--make-advice (orig-family)
+  "Create advice function for ORIG-FAMILY to redirect to nerd fonts."
+  (lambda (orig-fn icon-name &rest args)
+    (if (not all-the-icons-nerd-fonts--advice-enabled)
+        (apply orig-fn icon-name args)
+      (let* ((override-key (concat (symbol-name orig-family) "-" icon-name))
+             (override (gethash override-key all-the-icons-nerd-fonts--override-map)))
+        (if override
+            ;; Specific override found
+            (apply (car override) (cdr override) args)
+          ;; Try family conversion
+          (let ((nerd-family (alist-get orig-family
+                                        all-the-icons-nerd-fonts-convert-families)))
+            (if nerd-family
+                ;; Convert icon name: underscores to hyphens (material uses underscores,
+                ;; nerd-fonts alists use hyphens after prefix stripping)
+                (let ((nerd-icon-name (string-replace "_" "-" icon-name)))
+                  (if (all-the-icons-nerd-fonts--icon-exists-p nerd-family nerd-icon-name)
+                      (apply nerd-family nerd-icon-name args)
+                    ;; Icon doesn't exist in nerd family, fall through to original
+                    (apply orig-fn icon-name args)))
+              ;; No family conversion, use original
+              (apply orig-fn icon-name args))))))))
+
+(defun all-the-icons-nerd-fonts--install-advice ()
+  "Install advice on all-the-icons family functions."
+  (dolist (entry all-the-icons-nerd-fonts-convert-families)
+    (let ((orig-family (car entry)))
+      (when (fboundp orig-family)
+        (advice-add orig-family :around
+                    (all-the-icons-nerd-fonts--make-advice orig-family)
+                    '((name . all-the-icons-nerd-fonts)))))))
+
+(defun all-the-icons-nerd-fonts--remove-advice ()
+  "Remove advice from all-the-icons family functions."
+  (dolist (entry all-the-icons-nerd-fonts-convert-families)
+    (let ((orig-family (car entry)))
+      (when (fboundp orig-family)
+        (advice-remove orig-family 'all-the-icons-nerd-fonts)))))
+
 ;;;###autoload
 (defun all-the-icons-nerd-fonts-prefer (&optional list-vars)
   "Replace any `all-the-icons' associations with `nerd-fonts'.
+This function does two things:
+1. Rewrites icon alist variables to use nerd font families.
+2. Installs function advice to intercept direct calls to
+   `all-the-icons-material', `all-the-icons-faicon', etc.
+
 When LIST-VARS is set update LIST-VARS instead of the standard all-the-icons
 list variables."
+  ;; Build override map and install advice for direct function calls
+  (setq all-the-icons-nerd-fonts--override-map
+        (all-the-icons-nerd-fonts--build-override-map))
+  (all-the-icons-nerd-fonts--install-advice)
+  (setq all-the-icons-nerd-fonts--advice-enabled t)
+
+  ;; Also update alist variables (original behavior)
   (let ((override-map (make-hash-table
                        :size (length all-the-icons-nerd-fonts-overrides))))
     (dolist (it all-the-icons-nerd-fonts-overrides)
@@ -200,7 +289,16 @@ list variables."
           (when-let ((family-override
                       (alist-get (cadr assoc)
                                  all-the-icons-nerd-fonts-convert-families)))
-            (setf (cadr assoc) family-override)))))))
+            (setf (cadr assoc) family-override))))))
+  t)
+
+;;;###autoload
+(defun all-the-icons-nerd-fonts-unprefer ()
+  "Disable nerd font function advice.
+Note: This does not restore alist variables to their original values."
+  (interactive)
+  (setq all-the-icons-nerd-fonts--advice-enabled nil)
+  (all-the-icons-nerd-fonts--remove-advice))
 
 (defconst all-the-icons-nerd-fonts--data-remap-alist
   '((all-the-icons-data/alltheicon-alist . all-the-icons-data/alltheicons-alist)

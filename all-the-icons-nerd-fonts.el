@@ -50,6 +50,10 @@
   "The font-family to use with `nerd-fonts' icons."
   :type 'string)
 
+(defcustom all-the-icons-nerd-fonts-advise-all-the-icons-functions t
+  "When true add advice trying to replace all-the-icons icons with nerd-fonts."
+  :type 'boolean)
+
 ;; Define new `all-the-icons' families for available nerd fonts.
 (defmacro all-the-icons-nerd-fonts--define-family (family data-alist prefix)
   "Define a `all-the-icons' font for the nerd-font family FAMILY.
@@ -264,10 +268,11 @@ This function does two things:
 When LIST-VARS is set update LIST-VARS instead of the standard all-the-icons
 list variables."
   ;; Build override map and install advice for direct function calls
-  (setq all-the-icons-nerd-fonts--override-map
-        (all-the-icons-nerd-fonts--build-override-map))
-  (all-the-icons-nerd-fonts--install-advice)
-  (setq all-the-icons-nerd-fonts--advice-enabled t)
+  (when all-the-icons-nerd-fonts-advise-all-the-icons-functions
+    (setq all-the-icons-nerd-fonts--override-map
+          (all-the-icons-nerd-fonts--build-override-map))
+    (all-the-icons-nerd-fonts--install-advice)
+    (setq all-the-icons-nerd-fonts--advice-enabled t))
 
   ;; Also update alist variables (original behavior)
   (let ((override-map (make-hash-table
